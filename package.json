@@ -6,7 +6,9 @@
   "author": "Brian Douglas <brian@opensauced.pizza>",
   "private": true,
   "license": "Apache 2.0",
-  "files": ["build/**/*"],
+  "files": [
+    "build/**/*"
+  ],
   "homepage": "https://app.opensauced.pizza",
   "bugs": {
     "url": "https://github.com/open-sauced/app/issues"
