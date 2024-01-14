@@ -1,5 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
 import Button from "components/atoms/Button/button";
+import TextInput from "components/atoms/TextInput/text-input";
 import { Dialog } from "./Dialog";
 
 type Story = StoryObj<typeof Dialog>;
@@ -21,13 +22,13 @@ export default meta;
 
 export const Default: Story = {};
 
-export const WithCancelButton: Story = {
+export const NoCancelButton: Story = {
   args: {
-    cancelButton: true,
+    cancelButton: false,
   },
 };
 
-export const WithCustomButtonText: Story = {
+export const CustomButtonText: Story = {
   args: {
     cancelButton: true,
     cancelButtonText: "Custom Cancel",
@@ -35,8 +36,45 @@ export const WithCustomButtonText: Story = {
   },
 };
 
-export const WithNoDescription: Story = {
+export const NoDescription: Story = {
   args: {
     description: undefined,
+  },
+};
+
+export const NoTitleAndDescription: Story = {
+  args: {
+    title: undefined,
+    description: undefined,
+  },
+};
+
+export const NoButtons: Story = {
+  args: {
+    cancelButton: false,
+    confirmButton: false,
+  },
+};
+
+export const DestructiveVariant: Story = {
+  args: {
+    variant: "destructive",
+    title: "Delete Page",
+    description: (
+      <p>
+        Are you sure you want to delete <span className="font-bold text-light-slate-12">some page to delete</span>? If
+        you have data on this page that your team is using it would be difficult for your team to get access to track
+        your project.
+      </p>
+    ),
+    children: (
+      <div className="w-max">
+        <span className="font-bold text-light-slate-12">This action cannot be undone</span>
+        <p>
+          Type <span className="font-bold text-light-red-10">DELETE</span> in all caps to confirm
+        </p>
+        <TextInput />
+      </div>
+    ),
   },
 };

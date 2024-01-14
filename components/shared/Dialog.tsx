@@ -4,15 +4,17 @@ import { AiOutlineClose } from "react-icons/ai";
 import Button from "components/atoms/Button/button";
 
 interface DialogProps {
-  onOpenChange: (open: boolean) => void;
-  title: string | ReactElement;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  title?: string | ReactElement;
   description?: string | ReactElement;
-  variant: "default" | "destructive" | "warning" | "success";
+  variant?: "default" | "destructive" | "warning" | "success";
   closeButtonText?: string;
   cancelButton?: boolean;
   cancelButtonText?: string;
+  confirmButton?: boolean;
   confirmButtonText?: string;
-  onConfirm: (event: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement, MouseEvent>) => void;
+  onConfirm?: (event: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement, MouseEvent>) => void;
   onCancel?: (event: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement, MouseEvent>) => void;
   trigger: ReactElement;
   overlay?: boolean;
@@ -26,7 +28,8 @@ export const Dialog = (props: DialogProps) => {
     description,
     variant,
     closeButtonText = "Close",
-    cancelButton = false,
+    confirmButton = true,
+    cancelButton = true,
     cancelButtonText = "Cancel",
     confirmButtonText = "OK",
     onConfirm,
@@ -36,8 +39,7 @@ export const Dialog = (props: DialogProps) => {
     children,
   } = props;
 
-  // TODO: Add variant styles
-  // TODO: Add cancel button
+  const dialogVariant = variant === "destructive" ? variant : "primary";
 
   return (
     <DialogPrimitive.Root onOpenChange={onOpenChange}>
@@ -49,10 +51,12 @@ export const Dialog = (props: DialogProps) => {
           ) : null}
           <DialogPrimitive.Content
             onEscapeKeyDown={() => {}}
-            className="fixed z-50 w-full pb-3 grid gap-4 bg-light-slate-2 lg:p-6 animate-in data-[state=open]:fade-in-90 data-[state=open]:slide-in-from-bottom-10 md:w-max rounded-lg sm:zoom-in-90 data-[state=open]:sm:slide-in-from-bottom-0 p-4"
+            className="fixed z-50 w-full pb-3 gap-4 bg-light-slate-2 lg:p-6 animate-in data-[state=open]:fade-in-90 data-[state=open]:slide-in-from-bottom-10 md:w-max rounded-lg sm:zoom-in-90 data-[state=open]:sm:slide-in-from-bottom-0 grid grid-cols-1 p-4 max-w-[90%] lg:max-w-xl rounded-t-lg"
           >
             <div className="flex flex-col space-y-2 text-center sm:text-left">
-              <DialogPrimitive.Title className="text-lg font-semibold text-slate-900">{title}</DialogPrimitive.Title>
+              {title ? (
+                <DialogPrimitive.Title className="text-lg font-semibold text-slate-900">{title}</DialogPrimitive.Title>
+              ) : null}
               {description ? (
                 <DialogPrimitive.Description className="text-sm text-slate-500">
                   {description}
@@ -68,17 +72,19 @@ export const Dialog = (props: DialogProps) => {
                   </Button>
                 </DialogPrimitive.Close>
               ) : null}
-              <DialogPrimitive.Close>
-                <Button
-                  onClick={(event) => {
-                    onConfirm(event);
-                  }}
-                  className="w-max"
-                  variant="primary"
-                >
-                  {confirmButtonText}
-                </Button>
-              </DialogPrimitive.Close>
+              {confirmButton ? (
+                <DialogPrimitive.Close>
+                  <Button
+                    onClick={(event) => {
+                      onConfirm && onConfirm(event);
+                    }}
+                    className="w-max"
+                    variant={dialogVariant}
+                  >
+                    {confirmButtonText}
+                  </Button>
+                </DialogPrimitive.Close>
+              ) : null}
             </div>
             <DialogPrimitive.Close className="absolute top-4 right-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-slate-100 ">
               <AiOutlineClose size={20} />

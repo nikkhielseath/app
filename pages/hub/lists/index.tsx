@@ -6,7 +6,6 @@ import { GetServerSidePropsContext } from "next";
 import { WithPageLayout } from "interfaces/with-page-layout";
 import HubLayout from "layouts/hub";
 
-import { Dialog, DialogContent, DialogTitle } from "components/molecules/Dialog/dialog";
 import PaginationResults from "components/molecules/PaginationResults/pagination-result";
 import Pagination from "components/molecules/Pagination/pagination";
 import SkeletonWrapper from "components/atoms/SkeletonLoader/skeleton-wrapper";
@@ -21,6 +20,7 @@ import { useFetchAllLists } from "lib/hooks/useList";
 import useSupabaseAuth from "lib/hooks/useSupabaseAuth";
 import useFetchFeaturedLists from "lib/hooks/useFetchFeaturedLists";
 import { getAllFeatureFlags } from "lib/utils/server/feature-flags";
+import { Dialog } from "components/shared/Dialog";
 
 export const getServerSideProps = async (context: GetServerSidePropsContext) => {
   const supabase = createPagesServerClient(context);
@@ -154,12 +154,8 @@ const ListsHub: WithPageLayout = () => {
         />
       </div>
 
-      <Dialog open={isDeleteOpen}>
-        <DialogContent className="grid grid-cols-1 gap-4 p-4 max-w-[90%] lg:max-w-xl rounded-t-lg">
-          <DialogTitle>
-            <Title level={3}>Delete List</Title>
-          </DialogTitle>
-
+      <Dialog title="Delete List">
+        <div className="grid grid-cols-1 gap-4 p-4 max-w-[90%] lg:max-w-xl rounded-t-lg">
           <Text>
             Are you sure you want to delete <span className="font-bold text-light-slate-12">{listNameToDelete}</span>?
             If you have data on this list that your team is using, they will lose access.
@@ -192,7 +188,7 @@ const ListsHub: WithPageLayout = () => {
               Cancel
             </Button>
           </div>
-        </DialogContent>
+        </div>
       </Dialog>
     </>
   );
