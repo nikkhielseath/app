@@ -49,13 +49,6 @@ export const NoTitleAndDescription: Story = {
   },
 };
 
-export const NoButtons: Story = {
-  args: {
-    cancelButton: false,
-    confirmButton: false,
-  },
-};
-
 export const DestructiveVariant: Story = {
   args: {
     variant: "destructive",

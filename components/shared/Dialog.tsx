@@ -3,8 +3,7 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { AiOutlineClose } from "react-icons/ai";
 import Button from "components/atoms/Button/button";
 
-interface DialogProps {
-  open?: boolean;
+type DialogProps = {
   onOpenChange?: (open: boolean) => void;
   title?: string | ReactElement;
   description?: string | ReactElement;
@@ -12,23 +11,33 @@ interface DialogProps {
   closeButtonText?: string;
   cancelButton?: boolean;
   cancelButtonText?: string;
-  confirmButton?: boolean;
   confirmButtonText?: string;
   onConfirm?: (event: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement, MouseEvent>) => void;
   onCancel?: (event: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement, MouseEvent>) => void;
-  trigger: ReactElement;
   overlay?: boolean;
   children: ReactElement;
-}
+} & (
+  | {
+      open: boolean;
+      onClose: (event: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement, MouseEvent>) => void;
+      trigger: never;
+    }
+  | {
+      open: never;
+      onClose?: (event: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement, MouseEvent>) => void;
+      trigger: ReactElement;
+    }
+);
 
 export const Dialog = (props: DialogProps) => {
   const {
+    open,
+    onClose,
     onOpenChange,
     title,
     description,
     variant,
     closeButtonText = "Close",
-    confirmButton = true,
     cancelButton = true,
     cancelButtonText = "Cancel",
     confirmButtonText = "OK",
@@ -39,10 +48,11 @@ export const Dialog = (props: DialogProps) => {
     children,
   } = props;
 
+  // TODO: warning and success variant styling
   const dialogVariant = variant === "destructive" ? variant : "primary";
 
   return (
-    <DialogPrimitive.Root onOpenChange={onOpenChange}>
+    <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
       <DialogPrimitive.Trigger>{trigger}</DialogPrimitive.Trigger>
       <DialogPrimitive.Portal>
         <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -72,19 +82,17 @@ export const Dialog = (props: DialogProps) => {
                   </Button>
                 </DialogPrimitive.Close>
               ) : null}
-              {confirmButton ? (
-                <DialogPrimitive.Close>
-                  <Button
-                    onClick={(event) => {
-                      onConfirm && onConfirm(event);
-                    }}
-                    className="w-max"
-                    variant={dialogVariant}
-                  >
-                    {confirmButtonText}
-                  </Button>
-                </DialogPrimitive.Close>
-              ) : null}
+              <DialogPrimitive.Close>
+                <Button
+                  onClick={(event) => {
+                    onConfirm && onConfirm(event);
+                  }}
+                  className="w-max"
+                  variant={dialogVariant}
+                >
+                  {confirmButtonText}
+                </Button>
+              </DialogPrimitive.Close>
             </div>
             <DialogPrimitive.Close className="absolute top-4 right-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-slate-100 ">
               <AiOutlineClose size={20} />
